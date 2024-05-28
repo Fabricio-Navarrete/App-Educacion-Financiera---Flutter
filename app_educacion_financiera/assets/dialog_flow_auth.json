@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "flutterbotedufinan-tmpk",
+  "private_key_id": "75608004c2bd866dd70889c7fec4e46345b1a3f9",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDS5Mhce9iGc8u5\nOnGp7IW9b8PqoPQ4YcUaQYR/G8JpfRfnTEk2QmHaYV0i0ClJTLoRJKes1xxYt+N4\n1RY3VVLm3kHBOljV0277va0GuO0RQIdl1YC7C6eMZzrN679Vdm9iMDDPdZVIj11I\neKy08nScC2JLzhXJnZlHV2oIt4hknzl/kD0PUj18PogRPivYS2sr9yREIIl3fXuy\nIZ04bjh5ONNxs8r7QNG1ZGRaIUs0AfqHCi4OJB2xwdv4GRDmMIKwm8i+SkaC0+n5\nRe5V3vWA5Tg9pYv99+m/DIjPMfkyIhFBCrwzgXX8pQ4BmLZ0vHx7X6FSzpPyvMYr\nzRyKYYsVAgMBAAECggEAE4bmfGsP3JHVOlnh02DYmKFEITH1BabGiCH/4YBnAGXP\nnvWDzo0tSqSllIcfWNpMsjCpgTShEHU6ZTefE9GH2GOaRV4ggpqjVeuKnVWQcdP+\nlXHENngjno73tWsPhMYaFcaDhnoLMAmXkrxwYAgWaapuLWRaxRfIF6si4MVpph34\nXEELjSDXXVKknkMIhMOYjneXLjAqx7YuRz8t3OuCOt9NVgsgeVOYIjq1GgymGsP0\ng5xHSA95Y5cyArDFhKljChR45vLAN7gRnhK1D+REp9qACqlMH2+UGuYxc0CkPug7\nVua12JU8KsneGe0OQloNTXWejh2ZBox5JR7Wd0+WkwKBgQDz/m/LgUE1M5768TqR\nNTeG1kh0/N1iMK+3akieo4zx+07YySprvl4xTPbQjaLoA87lWXx/JahnCkuJLq5f\nVdXIlLQWNfLVBiVhBcMI8mPisdZnA2qAoW3YjsHyZq9SLZBGC8VJ20yslpaC0nkV\neE+JkmCwn4R/T9eNZat+trgh0wKBgQDdRWLpNIAQEwuC4KY3rlgL0cUzESY+CrIJ\nNfneK6KLHyVOj70xAmy8VE+1cksmw/jsNEbrIWBO0j5g8D0EWGkyIF6RbtNpMtBM\nfaBH5+9nNOCnmITo1dj/fCVOqfQCjF8hYl4S2unPJ/9qyS2c+aDKZxqvUjPnuoxq\njRSls9mmdwKBgQCEcCZUixtO+m8f/RJyQTWbnfKEdcDhDFZEs48pdNMLggKBT2gU\nRaexEPqjp022rGKAQTt/dHxdOcxYcRs7Kkc5ceXybGQb1xMw/8SmtZMcOLWNAuCr\nY3RRaOPDZJNjgtHeA4OaHEwZHkAiUIZi7gQWQ3ryRBPSWw9Ac+BLjniR+wKBgQCJ\nqFU0yFizp2WN8rz1/xz/nW2Vq6GjD3xbhp0AvxzMeH/5NCt7hgqnz7wXIhfm8hy2\ntn84YPdNkjcEj/El9urbKJAs4kncNKSqMa25jm2+Q4NQQO7O+9uYdl+vZMRNoY69\ncjkcedzj5/pbMPWTpymFQkezsuxfygr5bvPdctqBWQKBgBUwomTqaTpfxxdDHCDV\nTri3FnAstRpR6qxLr4YejS3XDxKmf7rc//H0TGR4ZwvWremvryk6NlDjgAGAml8Q\n2UEpDqJid+dWIP3/ATAHucjrU9Cq6H7+/DeTOFfB618cb2cZfLeeLJezA8x3l00r\nTlTiGbzX86OVdVPxGO6EU7cz\n-----END PRIVATE KEY-----\n",
+  "client_email": "botedufinan@flutterbotedufinan-tmpk.iam.gserviceaccount.com",
+  "client_id": "100267610751186106747",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/botedufinan%40flutterbotedufinan-tmpk.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
