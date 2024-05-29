@@ -43,4 +43,25 @@ class Estudiante {
       'email': email,
     };
   }
+  Estudiante copyWith({
+    int? idEstudiante,
+    String? usuario,
+    String? pwd,
+    String? nombreUsuario,
+    DateTime? fechaNacimiento,
+    double? puntaje,
+    int? nivel,
+    String? email,
+  }) {
+    return Estudiante(
+      idEstudiante: idEstudiante ?? this.idEstudiante,
+      usuario: usuario ?? this.usuario,
+      pwd: pwd ?? this.pwd,
+      nombreUsuario: nombreUsuario ?? this.nombreUsuario,
+      fechaNacimiento: fechaNacimiento ?? this.fechaNacimiento,
+      puntaje: puntaje ?? this.puntaje,
+      nivel: nivel ?? this.nivel,
+      email: email ?? this.email,
+    );
+  }
 }

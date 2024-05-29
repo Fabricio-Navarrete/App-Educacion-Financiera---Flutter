@@ -11,9 +11,11 @@ class MainScreen extends StatelessWidget {
     Estudiante? estudiante = Provider.of<EstudianteModel>(context).estudiante;
     String user = '';
     double puntaje = 0.0;
+    int nivel = 0;
     if (estudiante != null) {
       user = estudiante.nombreUsuario;
       puntaje = estudiante.puntaje;
+      nivel = estudiante.nivel;
     }
     return Scaffold(
       appBar: AppBar(
@@ -39,15 +41,31 @@ class MainScreen extends StatelessWidget {
                   border: Border.all(color: Colors.white, width: 2.0),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: SizedBox(
-                    height: 8,
-                    child: LinearProgressIndicator(
-                      value: puntaje,
-                      backgroundColor: Colors.grey[300],
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: SizedBox(
+                        height:20,
+                        child: LinearProgressIndicator(
+                          value: puntaje,
+                          backgroundColor: Colors.grey[300],
+                        ),
+                      ),
                     ),
-                  ),
+                    Positioned.fill(
+                      child: Center(
+                        child: Text(
+                          'Nivel $nivel',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

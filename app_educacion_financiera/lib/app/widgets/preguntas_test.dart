@@ -1,8 +1,11 @@
 import 'package:app_educacion_financiera/config/Infraestructure/Repositories/lecciones_repository.dart';
+import 'package:app_educacion_financiera/config/Models/Estudiante.dart';
 import 'package:app_educacion_financiera/config/Models/pregunas.dart';
 import 'package:app_educacion_financiera/config/Models/respuestas.dart';
+import 'package:app_educacion_financiera/config/Provider/estudiante_provider.dart';
 import 'package:app_educacion_financiera/config/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
   final int idLeccion;
@@ -22,7 +25,8 @@ class QuestionnaireScreenState extends State<QuestionnaireScreen> {
   int currentQuestionIndex = 0;
   int? selectedAnswerIndex;
   int correctAnswersCount = 0;
-
+  int idEstudiante = 0;
+  int nivel = 1;
   @override
   void initState() {
     super.initState();
@@ -43,9 +47,27 @@ class QuestionnaireScreenState extends State<QuestionnaireScreen> {
     selectedAnswerIndex = null;
     setState(() {});
   }
+
   Future<void> updateProgress() async {
-    await _leccionesRepository.actualizarProgreso(correctAnswersCount, questions.length, idLeccion);
-  } 
+    await _leccionesRepository.actualizarProgreso(
+        correctAnswersCount, questions.length, idLeccion, idEstudiante);
+  }
+
+  Future<bool> getNivelEstudiante() async {
+    var nivelActual =
+        await _leccionesRepository.getNivelEstudiante(idEstudiante);
+    if (nivelActual.nivel > nivel) {
+      final estudianteModel = context.read<EstudianteModel>();
+
+      // Actualizar el nivel
+      estudianteModel.actualizarNivel(nivelActual.nivel); 
+
+      // Actualizar el puntaje
+      estudianteModel.actualizarPuntaje(0);
+      return true;
+    }
+    return false;
+  }
 
   void selectAnswer(int index) {
     setState(() {
@@ -67,14 +89,72 @@ class QuestionnaireScreenState extends State<QuestionnaireScreen> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
+          String message;
+          Widget image = const SizedBox.shrink(); // Widget vacío por defecto
+          bool levelUp = false; // Bandera para indicar si subió de nivel
+
+          // Verificar si subió de nivel
+          getNivelEstudiante().then((subeNivel) {
+            if (subeNivel) {
+              levelUp = true;
+            }
+          });
+
+          if (correctAnswersCount == questions.length) {
+            message =
+                '¡Felicidades! Respondiste correctamente todas las preguntas.';
+            image = Image.asset(
+                'assets/Imagenes/confetti.gif'); // Imagen de celebración
+          } else {
+            message =
+                'Respuestas correctas: $correctAnswersCount/${questions.length}\n\n'
+                '¡Vuelve a intentarlo!'; // Mensaje de feedback
+          }
+
           return AlertDialog(
             title: const Text('Resultado del cuestionario'),
-            content: Text('Respuestas correctas: $correctAnswersCount/${questions.length}'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                image, // Agregar la imagen
+                const SizedBox(
+                    height: 16), // Espacio entre la imagen y el texto
+                Text(message),
+              ],
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  appRouter.go('/learning');
+                  if (levelUp) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('¡Nivel aumentado!'),
+                          content: Text(
+                            'Felicitaciones subiste al nivel $nivel',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontFamily: 'GameFont', // Fuente de tipo juego
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                appRouter.go('/learning');
+                              },
+                              child: const Text('¡Genial!'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    appRouter.go('/learning');
+                  }
                 },
                 child: const Text('Aceptar'),
               ),
@@ -87,6 +167,11 @@ class QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Estudiante? estudiante = Provider.of<EstudianteModel>(context).estudiante;
+    if (estudiante != null) {
+      idEstudiante = estudiante.idEstudiante;
+      nivel = estudiante.nivel;
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cuestionario'),
@@ -155,10 +240,14 @@ class QuestionnaireScreenState extends State<QuestionnaireScreen> {
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: selectedAnswerIndex == index ? Colors.green : Colors.white,
+                  color: selectedAnswerIndex == index
+                      ? Colors.green
+                      : Colors.white,
                 ),
                 borderRadius: BorderRadius.circular(8.0),
-                color: selectedAnswerIndex == index ? Colors.green.shade100 : Colors.white,
+                color: selectedAnswerIndex == index
+                    ? Colors.green.shade100
+                    : Colors.white,
               ),
               child: ElevatedButton(
                 onPressed: () => selectAnswer(index),

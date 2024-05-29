@@ -2,6 +2,7 @@ import 'package:app_educacion_financiera/config/Infraestructure/Datasources/Lecc
 import 'package:app_educacion_financiera/config/Models/Lecciones.dart';
 import 'package:app_educacion_financiera/config/Models/Temas.dart';
 import 'package:app_educacion_financiera/config/Models/contenido_lecciones.dart';
+import 'package:app_educacion_financiera/config/Models/getNivelEstudiante.dart';
 import 'package:app_educacion_financiera/config/Models/pregunas.dart';
 import 'package:app_educacion_financiera/config/Models/respuestas.dart';
 import 'package:app_educacion_financiera/config/constantes/enviroment.dart';
@@ -68,14 +69,27 @@ class LeccionesRepository implements LeccionesDataSource {
   }
   
   @override
-  Future<Lecciones> actualizarProgreso(int correctas , int total, int idLeccion) async{
+  Future<Lecciones> actualizarProgreso(int correctas , int total, int idLeccion, int idEstudiante) async{
     try{
-      final Lecciones leccion = Lecciones(idLeccion: idLeccion, idTema: 0, titulo: '', descripcion: '', imagen: '', progreso: correctas/total);
+      final Lecciones leccion = Lecciones(idLeccion: idLeccion, idTema: 0, titulo: '', descripcion: '', imagen: '', 
+      progreso: correctas/total, idEstudiante:idEstudiante );
       final response = await _dio.post('${Environment.apiUrl}LeccionApp/ActualizarProgreso', data: leccion.toJson());
       return leccion;
     }
     catch(e){
       throw Exception('Error al actualizar el progreso');
+    }
+  }
+
+  @override
+  Future<GetNivelEstudiante> getNivelEstudiante(int idEstudiante) async{
+    try {
+      final response = await _dio.get(
+          '${Environment.apiUrl}LeccionApp/GetNivelEstudiante?idEstudiante=$idEstudiante');
+      var list = GetNivelEstudiante.fromJson(response.data);
+      return list;
+    } catch (e) {
+      throw Exception('Error al obtener nivel');
     }
   }
 }

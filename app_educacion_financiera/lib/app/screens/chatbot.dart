@@ -44,7 +44,8 @@ class HomeState extends State<Home> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFF2A2F32), // Color de la barra de entrada de texto
+                color: const Color(
+                    0xFF2A2F32), // Color de la barra de entrada de texto
                 borderRadius: BorderRadius.circular(30),
               ),
               child: Row(
@@ -77,22 +78,40 @@ class HomeState extends State<Home> {
   }
 
   sendMessage(String text) async {
-    if (text.isEmpty) {
-      print('Message is empty');
-    } else {
-      setState(() {
-        addMessage(Message(text: DialogText(text: [text])), true);
-      });
+  if (text.isEmpty) {
+    print('Message is empty');
+  } else {
+    setState(() {
+      addMessage(Message(text: DialogText(text: [text])), true);
+    });
 
-      DetectIntentResponse response = await dialogFlowtter.detectIntent(
-        queryInput: QueryInput(text: TextInput(text: text)),
-      );
-      if (response.message == null) return;
+    DetectIntentResponse response = await dialogFlowtter.detectIntent(
+      queryInput: QueryInput(text: TextInput(text: text)),
+    );
+
+    if (response.queryResult?.intent == null) {
+      // No se encontró una intención coincidente
+      setState(() {
+        addMessage(Message(
+          text: DialogText(text: const [
+            'Perdón, no tengo la información que buscas. ¿Puedes preguntar de otra manera?'
+          ]),
+        ));
+      });
+    } else if (response.message == null) {
+      // Se encontró una intención, pero no hay mensaje predefinido
+      addMessage(Message(
+        text: DialogText(text: const [
+          'Perdón, no puedo responder a eso en este momento.'
+        ]),
+      ));
+    } else {
       setState(() {
         addMessage(response.message!);
       });
     }
   }
+}
 
   addMessage(Message message, [bool isUserMessage = false]) {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
@@ -123,7 +142,9 @@ class ChatBubble extends StatelessWidget {
   final Message message;
   final bool isUserMessage;
 
-  const ChatBubble({required this.message, required this.isUserMessage, Key? key}) : super(key: key);
+  const ChatBubble(
+      {required this.message, required this.isUserMessage, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +154,9 @@ class ChatBubble extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isUserMessage ? const Color(0xFF056162) : const Color(0xFF2A2F32), // Color de los mensajes
+          color: isUserMessage
+              ? const Color(0xFF056162)
+              : const Color(0xFF2A2F32), // Color de los mensajes
           borderRadius: isUserMessage
               ? const BorderRadius.only(
                   topLeft: Radius.circular(15),

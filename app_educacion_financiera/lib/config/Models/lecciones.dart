@@ -5,6 +5,7 @@ class Lecciones {
   final String descripcion;
   final String imagen;
   final double progreso;
+  final int idEstudiante;
 
   Lecciones(
       {required this.idLeccion,
@@ -12,7 +13,8 @@ class Lecciones {
       required this.titulo,
       required this.descripcion,
       required this.imagen,
-      required this.progreso});
+      required this.progreso,
+      required this.idEstudiante});
 
   factory Lecciones.fromJson(Map<String, dynamic> json) {
     return Lecciones(
@@ -22,6 +24,7 @@ class Lecciones {
       idLeccion: json['idLeccion'],
       imagen: json['imagen_Titulo'],
       progreso: json['progreso'],
+      idEstudiante: json['idEstudiante'],
     );
   }
   static List<Lecciones> fromListJson(List<dynamic> listJson) {
@@ -36,6 +39,7 @@ class Lecciones {
       'idLeccion': idLeccion,
       'imagen_titulo': imagen,
       'progreso': progreso,
+      'idEstudiante': idEstudiante
     };
   }
 }

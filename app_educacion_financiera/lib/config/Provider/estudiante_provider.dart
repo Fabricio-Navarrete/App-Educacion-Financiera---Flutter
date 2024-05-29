@@ -10,4 +10,17 @@ class EstudianteModel extends ChangeNotifier{
     _estudiante = estudiante;
     notifyListeners();
   }
+  void actualizarNivel(int nuevoNivel) {
+    if (_estudiante != null) {
+      _estudiante = _estudiante!.copyWith(nivel: nuevoNivel);
+      notifyListeners();
+    }
+  }
+
+  void actualizarPuntaje(double nuevoPuntaje) {
+    if (_estudiante != null) {
+      _estudiante = _estudiante!.copyWith(puntaje: nuevoPuntaje);
+      notifyListeners();
+    }
+  }
 }
