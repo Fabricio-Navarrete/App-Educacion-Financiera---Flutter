@@ -1,0 +1,20 @@
+[
+  {
+    "questionText": "¿Qué es un presupuesto?",
+    "answers": [
+      {"text": "Un plan de gastos e ingresos", "isCorrect": true},
+      {"text": "Un tipo de inversión", "isCorrect": false},
+      {"text": "Un impuesto", "isCorrect": false},
+      {"text": "Una cuenta bancaria", "isCorrect": false}
+    ]
+  },
+  {
+    "questionText": "¿Qué es la inflación?",
+    "answers": [
+      {"text": "Aumento de precios", "isCorrect": true},
+      {"text": "Disminución de precios", "isCorrect": false},
+      {"text": "Estabilidad económica", "isCorrect": false},
+      {"text": "Crecimiento económico", "isCorrect": false}
+    ]
+  }
+]

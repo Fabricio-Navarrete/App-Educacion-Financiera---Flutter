@@ -8,27 +8,13 @@ class AppTheme {
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark, // Agrega el brightness aquí
     primaryColor: _primaryColor,
-    colorScheme: ColorScheme.dark().copyWith( // Utiliza ColorScheme.dark()
+    colorScheme: const ColorScheme.dark().copyWith( // Utiliza ColorScheme.dark()
       primary: _accentColor,
       secondary: _accentColor,
     ),
-    textTheme: TextTheme(
-      bodyText1: TextStyle(color: _textColor),
-      bodyText2: TextStyle(color: _textColor),
-      button: TextStyle(color: _textColor),
-      caption: TextStyle(color: _textColor),
-      headline1: TextStyle(color: _textColor),
-      headline2: TextStyle(color: _textColor),
-      headline3: TextStyle(color: _textColor),
-      headline4: TextStyle(color: _textColor),
-      headline5: TextStyle(color: _textColor),
-      headline6: TextStyle(color: _textColor),
-      overline: TextStyle(color: _textColor),
-      subtitle1: TextStyle(color: _textColor),
-      subtitle2: TextStyle(color: _textColor),
-    ),
-    buttonTheme: ButtonThemeData(
-      buttonColor: _accentColor[400],
+    
+    buttonTheme: const ButtonThemeData(
+      buttonColor: Color.fromARGB(255, 63, 118, 182),
       textTheme: ButtonTextTheme.primary,
       
     ),
@@ -41,11 +27,11 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(_accentColor[600]!),
-        padding: MaterialStateProperty.all<EdgeInsets>(
+        backgroundColor: WidgetStateProperty.all<Color>(_primaryColor[600]!),
+        padding: WidgetStateProperty.all<EdgeInsets>(
           const EdgeInsets.symmetric(vertical: 15.0),
         ),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),

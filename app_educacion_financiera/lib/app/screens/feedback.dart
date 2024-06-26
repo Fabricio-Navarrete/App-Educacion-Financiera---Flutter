@@ -25,7 +25,6 @@ class SavingsFeedbackScreen extends StatelessWidget {
               const SizedBox(height: 32.0),
               Text(
                 '¡Hola, $friendName!',
-                style: Theme.of(context).textTheme.headline5,
               ),
               const SizedBox(height: 16.0),
                Text(

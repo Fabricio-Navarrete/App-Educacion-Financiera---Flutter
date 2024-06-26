@@ -1,4 +1,3 @@
-import 'package:app_educacion_financiera/config/Models/Estudiante.dart';
 import 'package:app_educacion_financiera/config/router/app_router.dart';
 import 'package:flutter/material.dart';
 
@@ -36,9 +35,9 @@ class ChallengePageState extends State<ChallengePage> {
             _buildTopicCard(
               icon: Icons.lightbulb_outline,
               color: Colors.orange,
-              title: 'Desafíos semanales',
+              title: 'Plan de ahorros',
               context: context,
-              route: '/feedback',
+              route: 'savingsplan',
             ),
             const SizedBox(height: 16.0),
             _buildTopicCard(
@@ -46,7 +45,7 @@ class ChallengePageState extends State<ChallengePage> {
               color: Colors.blue,
               title: 'Competencia entre amigos',
               context: context,
-              route: '/friendCompetition',
+              route: 'challengeFriend',
             ),
             const SizedBox(height: 16.0),
             _buildTopicCard(
@@ -54,7 +53,7 @@ class ChallengePageState extends State<ChallengePage> {
               color: Colors.green,
               title: 'Ranking',
               context: context,
-              route: '/ranking',
+              route: 'ranking',
             ),
           ],
         ),
@@ -72,7 +71,7 @@ class ChallengePageState extends State<ChallengePage> {
     return GestureDetector(
       onTap: () {
         // Definir la acción cuando se toca la tarjeta
-        Navigator.pushNamed(context, route);
+        appRouter.go('/$route');
       },
       child: Container(
         padding: const EdgeInsets.all(16.0),

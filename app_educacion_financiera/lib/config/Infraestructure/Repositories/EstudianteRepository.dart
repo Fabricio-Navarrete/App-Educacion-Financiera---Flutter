@@ -38,4 +38,19 @@ class EstudianteRepository implements EstudianteDataSource {
       return false;
     }
   }
+  
+  @override
+  Future<List<Estudiante>> listaUsuarios() async{
+    try {
+      final response = await _dio.get('${Environment.apiUrl}UsuariosApp/ListarUsuarios');
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        return data.map((json) => Estudiante.fromJson(json)).toList();
+      } else {
+        throw Exception('Error al obtener la lista de usuarios');
+      }
+    } catch (e) {
+      throw Exception('Error al obtener la lista de usuarios');
+    }
+  }
 }

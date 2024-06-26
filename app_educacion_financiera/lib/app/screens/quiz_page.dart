@@ -27,9 +27,8 @@ class _QuizPageState extends State<QuizPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 '¿Cuál es la definición de ahorro?',
-                style: Theme.of(context).textTheme.headline5,
               ),
               const SizedBox(height: 16.0),
               

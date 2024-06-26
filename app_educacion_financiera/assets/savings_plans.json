@@ -1,0 +1,28 @@
+{
+  "savingsPlans": [
+    {
+      "id": "1",
+      "goalName": "Vacaciones en la playa",
+      "targetAmount": 5000.00,
+      "months": 12,
+      "createdAt": "2024-06-25T10:00:00Z",
+      "currentSavings": 1000.00
+    },
+    {
+      "id": "2",
+      "goalName": "Nuevo ordenador",
+      "targetAmount": 1500.00,
+      "months": 6,
+      "createdAt": "2024-06-20T14:30:00Z",
+      "currentSavings": 250.00
+    },
+    {
+      "id": "3",
+      "goalName": "Fondo de emergencia",
+      "targetAmount": 10000.00,
+      "months": 24,
+      "createdAt": "2024-05-15T09:15:00Z",
+      "currentSavings": 2000.00
+    }
+  ]
+}
