@@ -6,10 +6,12 @@ import 'package:app_educacion_financiera/app/screens/lecciones_page.dart';
 import 'package:app_educacion_financiera/app/screens/lesson_page.dart';
 import 'package:app_educacion_financiera/app/screens/login_page.dart';
 import 'package:app_educacion_financiera/app/screens/main_page.dart';
+import 'package:app_educacion_financiera/app/screens/presupuesto_semanal.dart';
 import 'package:app_educacion_financiera/app/screens/ranking.dart';
 import 'package:app_educacion_financiera/app/screens/register_page.dart';
 import 'package:app_educacion_financiera/app/screens/savings_plan.dart';
 import 'package:app_educacion_financiera/app/screens/savings_plan_list.dart';
+import 'package:app_educacion_financiera/app/screens/weekly_challenges.dart';
 import 'package:app_educacion_financiera/app/widgets/preguntas_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,6 +42,14 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/challenge',
       builder: (context, state) => const ChallengePage(),
+    ),
+    GoRoute(
+      path: '/weeklychallenges',
+      builder: (context, state) => WeeklyChallengesScreen(),
+    ),
+    GoRoute(
+      path: '/presupuestoSemanal',
+      builder: (context, state) => WeeklyBudgetScreen(),
     ),
      GoRoute(
       path: '/challengeFriend',

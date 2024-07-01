@@ -1,11 +1,109 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:app_educacion_financiera/config/Models/Estudiante.dart';
 import 'package:app_educacion_financiera/config/Provider/estudiante_provider.dart';
 import 'package:app_educacion_financiera/config/router/app_router.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
+
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  late TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = [];
+
+  GlobalKey keyAppBar = GlobalKey();
+  GlobalKey keyAsistenteVirtual = GlobalKey();
+  GlobalKey keyAprendizaje = GlobalKey();
+  GlobalKey keyDesafio = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, showTutorial);
+  }
+
+  void showTutorial() {
+    initTargets();
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      textSkip: "SALTAR",
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+    )..show(context: context);
+  }
+
+  void initTargets() {
+    targets.add(
+      TargetFocus(
+        identify: "AppBar",
+        keyTarget: keyAppBar,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: const Text(
+              "Aquí puedes ver tu nombre de usuario, nivel actual y progreso.",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "AsistenteVirtual",
+        keyTarget: keyAsistenteVirtual,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: const Text(
+              "Usa el Asistente Virtual para obtener ayuda y respuestas a tus preguntas.",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "Aprendizaje",
+        keyTarget: keyAprendizaje,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: const Text(
+              "Accede a lecciones y material educativo sobre finanzas.",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "Desafio",
+        keyTarget: keyDesafio,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: const Text(
+              "Participa en desafíos para poner a prueba tus conocimientos y ganar puntos.",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Estudiante? estudiante = Provider.of<EstudianteModel>(context).estudiante;
@@ -19,7 +117,8 @@ class MainScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Oculta el botón de retroceso
+        key: keyAppBar,
+        automaticallyImplyLeading: false,
         title: Row(
           children: [
             Expanded(
@@ -46,7 +145,7 @@ class MainScreen extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: SizedBox(
-                        height:20,
+                        height: 20,
                         child: LinearProgressIndicator(
                           value: puntaje,
                           backgroundColor: Colors.grey[300],
@@ -58,10 +157,9 @@ class MainScreen extends StatelessWidget {
                         child: Text(
                           'Nivel $nivel',
                           style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0
-                          ),
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0),
                         ),
                       ),
                     ),
@@ -73,9 +171,9 @@ class MainScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout), // Icono para cerrar sesión
+            icon: const Icon(Icons.logout),
             onPressed: () {
-              appRouter.go('/'); // Navegar a la pantalla de inicio de sesión
+              appRouter.go('/');
             },
           ),
         ],
@@ -92,6 +190,7 @@ class MainScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: _buildButton(
+                      key: keyAsistenteVirtual,
                       icon: Image.asset(
                         'assets/Imagenes/chatbot.png',
                         width: 100,
@@ -107,6 +206,7 @@ class MainScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: _buildButton(
+                      key: keyAprendizaje,
                       icon: Image.asset(
                         'assets/Imagenes/leccion.png',
                         width: 100,
@@ -114,7 +214,6 @@ class MainScreen extends StatelessWidget {
                       ),
                       text: 'Aprendizaje',
                       onPressed: () {
-                        // Navegar a la pantalla de aprendizaje
                         appRouter.go('/learning', extra: estudiante);
                       },
                     ),
@@ -123,6 +222,7 @@ class MainScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: _buildButton(
+                      key: keyDesafio,
                       icon: Image.asset(
                         'assets/Imagenes/desafio.png',
                         width: 100,
@@ -144,11 +244,13 @@ class MainScreen extends StatelessWidget {
   }
 
   Widget _buildButton({
+    required Key key,
     required Image icon,
     required String text,
     required VoidCallback onPressed,
   }) {
     return Card(
+      key: key,
       color: Colors.grey[800],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -180,39 +282,5 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  void showLevelUpDialog(BuildContext context, int level) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('¡Subiste de nivel!'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.star,
-                color: Colors.yellow[600],
-                size: 100.0,
-              ),
-              Text(
-                '$level',
-                style: const TextStyle(
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // ... (mantén el método showLevelUpDialog sin cambios)
 }

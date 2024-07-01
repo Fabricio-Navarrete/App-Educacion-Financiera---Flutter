@@ -15,6 +15,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
   String _email = '';
+  String _lastName = '';
+  String _gender = '';
   String _password = '';
   String _username = '';
   DateTime? _selectedDate;
@@ -32,7 +34,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               fechaNacimiento: _selectedDate!,
               idEstudiante: 0,
               puntaje: 0,
-              nivel: 0);
+              nivel: 0,
+              apellido: _lastName,
+              genero: _gender);
           bool isRegistered =
               await EstudianteRepository().registrarEstudiante(estudiante);
           if (isRegistered) {
@@ -133,6 +137,21 @@ void _showErrorDialog() {
                     ),
                     const SizedBox(height: 16),
                     _buildTextFormField(
+                      hintText: 'Apellidos',
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Por favor, ingrese sus apellidos';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _lastName = value!;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    _buildGenderDropdown(),
+                    const SizedBox(height: 16),
+                    _buildTextFormField(
                       hintText: 'Correo electrónico',
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -142,6 +161,19 @@ void _showErrorDialog() {
                       },
                       onSaved: (value) {
                         _email = value!;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTextFormField(
+                      hintText: 'Usuario',
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Por favor, ingrese su nombre de usuario';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _username = value!;
                       },
                     ),
                     const SizedBox(height: 16),
@@ -172,19 +204,6 @@ void _showErrorDialog() {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _buildTextFormField(
-                      hintText: 'Usuario',
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Por favor, ingrese su nombre de usuario';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _username = value!;
-                      },
-                    ),
-                    const SizedBox(height: 16),
                     _buildDateField(),
                   ],
                 ),
@@ -198,10 +217,10 @@ void _showErrorDialog() {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green[600]!),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        WidgetStateProperty.all<Color>(Colors.green[600]!),
+                    padding: WidgetStateProperty.all<EdgeInsets>(
                         const EdgeInsets.symmetric(vertical: 16)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -298,4 +317,43 @@ void _showErrorDialog() {
       });
     }
   }
+  Widget _buildGenderDropdown() {
+  final Map<String, String> genderOptions = {
+    'M': 'Masculino',
+    'F': 'Femenino',
+    'O': 'Otro'
+  };
+
+  return DropdownButtonFormField<String>(
+    decoration: InputDecoration(
+      filled: true,
+      fillColor: Colors.grey[800],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+    ),
+    dropdownColor: Colors.grey[800],
+    style: const TextStyle(color: Colors.white),
+    hint: const Text('Seleccione su género', style: TextStyle(color: Colors.grey)),
+    value: _gender.isNotEmpty ? _gender : null,
+    onChanged: (String? newValue) {
+      setState(() {
+        _gender = newValue!;
+      });
+    },
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Por favor, seleccione su género';
+      }
+      return null;
+    },
+    items: genderOptions.entries.map<DropdownMenuItem<String>>((entry) {
+      return DropdownMenuItem<String>(
+        value: entry.key,
+        child: Text(entry.value),
+      );
+    }).toList(),
+  );
+}
 }

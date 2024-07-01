@@ -26,7 +26,7 @@ class ContentCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Lottie.network('${Environment.apiAnimate}/$iconPath',
+              Lottie.network('${Environment.apiAnimate}$iconPath',
                   height: 200), // Icono animado
               const SizedBox(height: 16),
               Text(

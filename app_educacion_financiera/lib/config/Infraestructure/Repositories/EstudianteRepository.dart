@@ -25,6 +25,7 @@ class EstudianteRepository implements EstudianteDataSource {
   @override
   Future<bool> registrarEstudiante(Estudiante estudiante) async {
     try {
+      var asd = estudiante.toJson();
       final response = await _dio.post(
         '${Environment.apiUrl}UsuariosApp/RegistrarEstudiante',
         data: estudiante.toJson(),
@@ -38,11 +39,12 @@ class EstudianteRepository implements EstudianteDataSource {
       return false;
     }
   }
-  
+
   @override
-  Future<List<Estudiante>> listaUsuarios() async{
+  Future<List<Estudiante>> listaUsuarios() async {
     try {
-      final response = await _dio.get('${Environment.apiUrl}UsuariosApp/ListarUsuarios');
+      final response =
+          await _dio.get('${Environment.apiUrl}UsuariosApp/ListarUsuarios');
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         return data.map((json) => Estudiante.fromJson(json)).toList();

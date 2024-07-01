@@ -1,6 +1,6 @@
 
 class Environment {
-  static String apiUrl = "http://192.168.18.4/ApiEducacion/api/";
-  static String apiImg = "http://192.168.18.4/ApiEducacion/Imagenes/";
-  static String apiAnimate = "http://192.168.18.4/ApiEducacion/Animation/";
+  static String apiUrl = "http://192.168.18.174/AppEduFin/api/";
+  static String apiImg = "http://192.168.18.174/AppEduFin/Imagenes/";
+  static String apiAnimate = "http://192.168.18.174/AppEduFin/Animation/";
 }

@@ -7,6 +7,8 @@ class Estudiante {
   final double puntaje;
   final int nivel;
   final String email;
+  final String apellido;
+  final String genero;
 
   Estudiante({
     required this.idEstudiante,
@@ -17,32 +19,39 @@ class Estudiante {
     required this.puntaje,
     required this.nivel,
     required this.email,
+    required this.apellido,
+    required this.genero
   });
 
   factory Estudiante.fromJson(Map<String, dynamic> json) {
     return Estudiante(
       idEstudiante: json['idEstudiante'],
-      usuario: json['usuario'],
-      pwd: json['contraseña'],
-      nombreUsuario: json['nombreUsuario'],
+      usuario: json['nombreUsuario'],
+      pwd: json['password'],
+      nombreUsuario: json['nombres'],
+      apellido: json['apellidos'],
+      genero: json['genero'],
       fechaNacimiento: DateTime.parse(json['fechaNacimiento']),
       puntaje: json['puntaje'],
       nivel: json['nivel'],
       email: json['email'],
     );
   }
-   Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'idEstudiante': idEstudiante,
-      'usuario': usuario,
-      'contraseña': pwd,
-      'nombreUsuario': nombreUsuario,
+      'nombreUsuario': usuario,
+      'password': pwd,
+      'nombres': nombreUsuario,
       'fechaNacimiento': fechaNacimiento.toIso8601String(),
       'puntaje': puntaje,
       'nivel': nivel,
       'email': email,
+      'genero': genero,
+      'apellidos' :apellido
     };
   }
+
   Estudiante copyWith({
     int? idEstudiante,
     String? usuario,
@@ -52,6 +61,8 @@ class Estudiante {
     double? puntaje,
     int? nivel,
     String? email,
+    String? apellido,
+    String? genero
   }) {
     return Estudiante(
       idEstudiante: idEstudiante ?? this.idEstudiante,
@@ -62,6 +73,8 @@ class Estudiante {
       puntaje: puntaje ?? this.puntaje,
       nivel: nivel ?? this.nivel,
       email: email ?? this.email,
+      apellido: apellido ?? this.apellido,
+      genero: genero ?? this.genero,
     );
   }
 }

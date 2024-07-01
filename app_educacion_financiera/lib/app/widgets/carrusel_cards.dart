@@ -11,12 +11,12 @@ class ContentCarousel extends StatefulWidget {
   const ContentCarousel({Key? key, required this.cardData}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _ContentCarouselState createState() => _ContentCarouselState();
 }
 
 class _ContentCarouselState extends State<ContentCarousel> {
   int _currentIndex = 0;
+  final CarouselController _carouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +24,11 @@ class _ContentCarouselState extends State<ContentCarousel> {
       future: widget.cardData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se cargan los datos
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text(
-              'Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Text('No hay datos disponibles');
         } else {
           final cardData = snapshot.data!;
           return Center(
@@ -35,6 +36,7 @@ class _ContentCarouselState extends State<ContentCarousel> {
               children: [
                 const SizedBox(height: 15),
                 CarouselSlider.builder(
+                  carouselController: _carouselController,
                   itemCount: cardData.length,
                   itemBuilder: (context, index, realIndex) {
                     final card = cardData[index];
@@ -79,8 +81,7 @@ class _ContentCarouselState extends State<ContentCarousel> {
                   ],
                 ),
                 const SizedBox(height: 15),
-                //agregar boton
-                
+                // Aquí puedes agregar tu botón adicional si lo necesitas
               ],
             ),
           );
@@ -88,6 +89,4 @@ class _ContentCarouselState extends State<ContentCarousel> {
       },
     );
   }
-
-  final CarouselController _carouselController = CarouselController();
 }
