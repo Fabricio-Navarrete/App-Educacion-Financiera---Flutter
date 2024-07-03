@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:app_educacion_financiera/config/Infraestructure/Repositories/EstudianteRepository.dart';
+import 'package:app_educacion_financiera/config/Models/Estudiante.dart';
+import 'package:app_educacion_financiera/config/Provider/estudiante_provider.dart';
 import 'package:app_educacion_financiera/config/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FinancialChallengeModule extends StatelessWidget {
   const FinancialChallengeModule({super.key});
@@ -12,17 +16,32 @@ class FinancialChallengeModule extends StatelessWidget {
   }
 }
 
-class OpponentSelectionScreen extends StatelessWidget {
-  final List<String> opponents = [
-    'Fabricio',
-    'Sandra',
-    'Sandro',
-    'Luis',
-    'David',
-    'Sandro'
-  ]; // Simulated list of users
+class OpponentSelectionScreen extends StatefulWidget {
+  const OpponentSelectionScreen({Key? key}) : super(key: key);
 
-  OpponentSelectionScreen({Key? key}) : super(key: key);
+  @override
+  _OpponentSelectionScreenState createState() =>
+      _OpponentSelectionScreenState();
+}
+
+class _OpponentSelectionScreenState extends State<OpponentSelectionScreen> {
+  late Future<List<Estudiante>> _opponentsFuture;
+  late EstudianteRepository _estudianteRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    _estudianteRepository = EstudianteRepository();
+    _opponentsFuture = _loadOpponents();
+  }
+
+  Future<List<Estudiante>> _loadOpponents() async {
+    Estudiante? estudiante = Provider.of<EstudianteModel>(context, listen: false).estudiante;
+    if (estudiante == null) {
+      throw Exception('No se encontró el estudiante actual');
+    }
+    return _estudianteRepository.listaUsuariosDesafio(estudiante.idEstudiante);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,51 +56,59 @@ class OpponentSelectionScreen extends StatelessWidget {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            appRouter.go('/challenge');
-          },
+          onPressed: () => appRouter.go('/challenge'),
         ),
       ),
-      body: ListView.builder(
-        itemCount: opponents.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ListTile(
-              title: Text(
-                opponents[index],
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              subtitle: const Text(
-                'Nivel: ${1}',
-                style: TextStyle(fontSize: 16),
-              ),
-              leading: CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Text(
-                  opponents[index][0].toUpperCase(),
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        QuizScreen(opponent: opponents[index]),
+      body: FutureBuilder<List<Estudiante>>(
+        future: _opponentsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No hay oponentes disponibles'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final opponent = snapshot.data![index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: ListTile(
+                    title: Text(
+                      opponent.nombreUsuario,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Nivel: ${opponent.nivel}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      child: Text(
+                        opponent.nombreUsuario[0].toUpperCase(),
+                        style: const TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuizScreen(opponent: opponent.nombreUsuario),
+                        ),
+                      );
+                    },
                   ),
                 );
               },
-            ),
-          );
+            );
+          }
         },
       ),
     );
   }
-}
-
-class QuizScreen extends StatefulWidget {
+}class QuizScreen extends StatefulWidget {
   final String opponent;
 
   const QuizScreen({Key? key, required this.opponent}) : super(key: key);
@@ -96,7 +123,7 @@ class QuizScreenState extends State<QuizScreen> {
   int _score = 0;
   bool _isAnswered = false;
   late Timer _timer;
-  int _timeLeft = 30;
+  int _timeLeft = 15;
 
   @override
   void initState() {
@@ -134,7 +161,7 @@ class QuizScreenState extends State<QuizScreen> {
       setState(() {
         _currentQuestionIndex++;
         _isAnswered = false;
-        _timeLeft = 30;
+        _timeLeft = 15;
       });
       _startTimer();
     } else {
@@ -230,14 +257,14 @@ class QuizScreenState extends State<QuizScreen> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color:
-                  _timeLeft <= 10 ? Colors.red.shade100 : Colors.blue.shade100,
+                  _timeLeft <= 5 ? Colors.red.shade100 : Colors.blue.shade100,
             ),
             child: Text(
               '$_timeLeft',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: _timeLeft <= 10 ? Colors.red : Colors.blue,
+                color: _timeLeft <= 5 ? Colors.red : Colors.blue,
               ),
             ),
           ),

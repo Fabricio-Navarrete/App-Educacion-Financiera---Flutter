@@ -1,10 +1,15 @@
+import 'package:app_educacion_financiera/config/Infraestructure/Repositories/lecciones_repository.dart';
+import 'package:app_educacion_financiera/config/Models/Estudiante.dart';
+import 'package:app_educacion_financiera/config/Provider/estudiante_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SavingsPlanCreationScreen extends StatefulWidget {
   const SavingsPlanCreationScreen({super.key});
 
   @override
-  _SavingsPlanCreationScreenState createState() => _SavingsPlanCreationScreenState();
+  _SavingsPlanCreationScreenState createState() =>
+      _SavingsPlanCreationScreenState();
 }
 
 class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
@@ -12,6 +17,13 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
   String _goalName = '';
   double _targetAmount = 0;
   int _months = 0;
+  late LeccionesRepository _leccionesRepository;
+  int idEstudiante = 0;
+  @override
+  void initState() {
+    super.initState();
+    _leccionesRepository = LeccionesRepository();
+  }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
@@ -21,8 +33,10 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
     }
   }
 
-  void _savePlan() {
+  void _savePlan() async {
     // Aquí simularíamos guardar el plan en una base de datos o API
+    var response =
+        await _leccionesRepository.savePlan(_goalName, _targetAmount, idEstudiante);
     print('Plan guardado: $_goalName, \$${_targetAmount}, $_months meses');
   }
 
@@ -33,28 +47,34 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.grey[900],
-          title: const Text('Resumen del Plan de Ahorro', 
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          title: const Text('Resumen del Plan de Ahorro',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               _summaryItem('Meta', _goalName),
-              _summaryItem('Monto objetivo', '\$${_targetAmount.toStringAsFixed(2)}'),
+              _summaryItem(
+                  'Monto objetivo', '\$${_targetAmount.toStringAsFixed(2)}'),
               _summaryItem('Plazo', '$_months meses'),
-              _summaryItem('Ahorro mensual', '\$${monthlySavings.toStringAsFixed(2)}'),
+              _summaryItem(
+                  'Ahorro mensual', '\$${monthlySavings.toStringAsFixed(2)}'),
             ],
           ),
           actions: [
             TextButton(
-              child: const Text('Aceptar', style: TextStyle(color: Colors.cyan)),
+              child:
+                  const Text('Aceptar', style: TextStyle(color: Colors.cyan)),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Volver a la pantalla de introducción
+                Navigator.of(context)
+                    .pop(); // Volver a la pantalla de introducción
               },
             ),
           ],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         );
       },
     );
@@ -66,7 +86,9 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.cyan)),
+          Text(label,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.cyan)),
           Text(value, style: const TextStyle(color: Colors.white)),
         ],
       ),
@@ -75,6 +97,10 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Estudiante? estudiante = Provider.of<EstudianteModel>(context).estudiante;
+    if (estudiante != null) {
+      idEstudiante = estudiante.idEstudiante;
+    }
     return Scaffold(
       backgroundColor: Colors.grey[850],
       appBar: AppBar(
@@ -92,14 +118,19 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
               children: [
                 const Text(
                   'Diseña tu Plan de Ahorro',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
                 _buildTextField(
                   label: 'Nombre de tu meta',
                   icon: Icons.flag,
-                  validator: (value) => value!.isEmpty ? 'Por favor ingresa un nombre para tu meta' : null,
+                  validator: (value) => value!.isEmpty
+                      ? 'Por favor ingresa un nombre para tu meta'
+                      : null,
                   onSaved: (value) => _goalName = value!,
                 ),
                 const SizedBox(height: 16),
@@ -109,7 +140,8 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) return 'Por favor ingresa un monto';
-                    if (double.tryParse(value) == null) return 'Por favor ingresa un número válido';
+                    if (double.tryParse(value) == null)
+                      return 'Por favor ingresa un número válido';
                     return null;
                   },
                   onSaved: (value) => _targetAmount = double.parse(value!),
@@ -121,7 +153,8 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) return 'Por favor ingresa un plazo';
-                    if (int.tryParse(value) == null) return 'Por favor ingresa un número entero';
+                    if (int.tryParse(value) == null)
+                      return 'Por favor ingresa un número entero';
                     return null;
                   },
                   onSaved: (value) => _months = int.parse(value!),
@@ -130,12 +163,14 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
                 ElevatedButton(
                   onPressed: _submitForm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Text('Crear Plan', style: TextStyle(fontSize: 18, color: Colors.white)),
+                    child: Text('Crear Plan',
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                 ),
               ],
@@ -157,19 +192,19 @@ class _SavingsPlanCreationScreenState extends State<SavingsPlanCreationScreen> {
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.cyan),
-        prefixIcon: Icon(icon, color: Colors.cyan),
+        labelStyle: const TextStyle(color: Colors.green),
+        prefixIcon: Icon(icon, color: Colors.green),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.cyan),
+          borderSide: const BorderSide(color: Colors.green),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.cyan.withOpacity(0.5)),
+          borderSide: BorderSide(color: Colors.green.withOpacity(0.5)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.cyan),
+          borderSide: const BorderSide(color: Colors.green),
         ),
         filled: true,
         fillColor: Colors.grey[800],

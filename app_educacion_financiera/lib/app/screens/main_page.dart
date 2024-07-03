@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:app_educacion_financiera/config/Models/Estudiante.dart';
 import 'package:app_educacion_financiera/config/Provider/estudiante_provider.dart';
@@ -24,37 +25,34 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, showTutorial);
+    Future.delayed(Duration.zero, checkTutorial);
   }
 
+  void checkTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isTutorialShown = prefs.getBool('isTutorialShown') ?? false;
+
+    if (!isTutorialShown) {
+      showTutorial();
+      prefs.setBool('isTutorialShown', true);
+    }
+  }
+  void cancelTutorial() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isTutorialShown', false);
+  }
   void showTutorial() {
     initTargets();
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
       colorShadow: Colors.black,
       textSkip: "SALTAR",
-      paddingFocus: 10,
+      paddingFocus: 5,
       opacityShadow: 0.8,
     )..show(context: context);
   }
 
   void initTargets() {
-    targets.add(
-      TargetFocus(
-        identify: "AppBar",
-        keyTarget: keyAppBar,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            child: const Text(
-              "Aquí puedes ver tu nombre de usuario, nivel actual y progreso.",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-
     targets.add(
       TargetFocus(
         identify: "AsistenteVirtual",
@@ -63,11 +61,13 @@ class _MainScreenState extends State<MainScreen> {
           TargetContent(
             align: ContentAlign.top,
             child: const Text(
-              "Usa el Asistente Virtual para obtener ayuda y respuestas a tus preguntas.",
-              style: TextStyle(color: Colors.white),
+              "Usa el Asistente Virtual para obtener ayuda.",
+              style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ),
         ],
+        shape: ShapeLightFocus.RRect,
+        radius: 5,
       ),
     );
 
@@ -79,11 +79,13 @@ class _MainScreenState extends State<MainScreen> {
           TargetContent(
             align: ContentAlign.bottom,
             child: const Text(
-              "Accede a lecciones y material educativo sobre finanzas.",
-              style: TextStyle(color: Colors.white),
+              "Accede a lecciones y material educativo.",
+              style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ),
         ],
+        shape: ShapeLightFocus.RRect,
+        radius: 5,
       ),
     );
 
@@ -95,11 +97,13 @@ class _MainScreenState extends State<MainScreen> {
           TargetContent(
             align: ContentAlign.bottom,
             child: const Text(
-              "Participa en desafíos para poner a prueba tus conocimientos y ganar puntos.",
-              style: TextStyle(color: Colors.white),
+              "Participa en desafíos para ganar puntos.",
+              style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ),
         ],
+        shape: ShapeLightFocus.RRect,
+        radius: 5,
       ),
     );
   }
@@ -174,6 +178,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: const Icon(Icons.logout),
             onPressed: () {
               appRouter.go('/');
+              cancelTutorial();
             },
           ),
         ],
@@ -282,5 +287,39 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // ... (mantén el método showLevelUpDialog sin cambios)
+  void showLevelUpDialog(BuildContext context, int level) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('¡Subiste de nivel!'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.star,
+                color: Colors.yellow[600],
+                size: 100.0,
+              ),
+              Text(
+                '$level',
+                style: const TextStyle(
+                  fontSize: 50.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

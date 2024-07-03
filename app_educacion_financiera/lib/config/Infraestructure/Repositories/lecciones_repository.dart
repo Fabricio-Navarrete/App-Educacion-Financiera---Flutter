@@ -3,6 +3,7 @@ import 'package:app_educacion_financiera/config/Models/Lecciones.dart';
 import 'package:app_educacion_financiera/config/Models/Temas.dart';
 import 'package:app_educacion_financiera/config/Models/contenido_lecciones.dart';
 import 'package:app_educacion_financiera/config/Models/getNivelEstudiante.dart';
+import 'package:app_educacion_financiera/config/Models/listSavingsPlan.dart';
 import 'package:app_educacion_financiera/config/Models/pregunas.dart';
 import 'package:app_educacion_financiera/config/Models/respuestas.dart';
 import 'package:app_educacion_financiera/config/constantes/enviroment.dart';
@@ -90,6 +91,45 @@ class LeccionesRepository implements LeccionesDataSource {
       return list;
     } catch (e) {
       throw Exception('Error al obtener nivel');
+    }
+  }
+
+  @override
+  Future<List<Listsavingsplan>> listaAhorros(int idEstudiante) async{
+    try {
+      final response = await _dio.get(
+          '${Environment.apiUrl}LeccionApp/ListPlanAhorro?idEstudiante=$idEstudiante');
+      var list = Listsavingsplan.fromListJson(response.data);
+      return list;
+    } catch (e) {
+      throw Exception('Error al obtener los datos de las respuestas');
+    }
+  }
+  
+  @override
+  Future<Listsavingsplan> savePlan(String goalname, double cantidad, int id) async{
+     try{
+      final Listsavingsplan leccion = Listsavingsplan
+      (id:0, goalName: goalname, currentSavings: 0, targetAmount: cantidad, idEstudiante: id);
+      final response = await _dio.post('${Environment.apiUrl}LeccionApp/SavePlan', data: leccion.toJson());
+      return leccion;
+    }
+    catch(e){
+      throw Exception('Error al actualizar el progreso');
+    }
+  }
+  
+  @override
+  Future<Listsavingsplan> updateSavings(int idMeta, double cantidad) async{
+    try{
+      final Listsavingsplan leccion = Listsavingsplan
+      (id:idMeta, goalName: '', 
+      currentSavings: cantidad, targetAmount: 0, idEstudiante: 0);
+      final response = await _dio.post('${Environment.apiUrl}LeccionApp/updateSavings', data: leccion.toJson());
+      return leccion;
+    }
+    catch(e){
+      throw Exception('Error al actualizar el progreso');
     }
   }
 }
