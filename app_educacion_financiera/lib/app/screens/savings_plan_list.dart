@@ -106,7 +106,25 @@ class _SavingsPlanListScreenState extends State<SavingsPlanListScreen> {
         ),
       ),
       body: _plans.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.savings_outlined, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'No tienes planes de ahorro',
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Crea uno nuevo con el botón +',
+              style: TextStyle(fontSize: 14, color: Colors.grey[400]),
+            ),
+          ],
+        ),
+      )
+    
           : ListView.builder(
               itemCount: _plans.length,
               itemBuilder: (context, index) {

@@ -8,7 +8,7 @@ class WeeklyChallengesScreen extends StatelessWidget {
   final String jsonData = '''
   {
     "weeklyChallenge": {
-      "week": 23,
+      "week": 15 ,
       "challenges": [
         {
           "id": 1,
@@ -16,20 +16,6 @@ class WeeklyChallengesScreen extends StatelessWidget {
           "description": "Crea un presupuesto para tus gastos de la próxima semana",
           "difficulty": "medium",
           "points": 100
-        },
-        {
-          "id": 2,
-          "title": "Ahorro inteligente",
-          "description": "Encuentra tres formas de reducir tus gastos diarios",
-          "difficulty": "easy",
-          "points": 50
-        },
-        {
-          "id": 3,
-          "title": "Inversión simulada",
-          "description": "Investiga y simula una inversión de S/. 1000 en acciones",
-          "difficulty": "hard",
-          "points": 200
         }
       ]
     }
